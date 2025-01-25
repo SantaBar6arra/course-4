@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="CouchDB.NET" Version="3.6.1" />
+  </ItemGroup>
+
 </Project>

@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   zookeeper:
     image: docker.io/bitnami/zookeeper:3.9
@@ -27,14 +25,25 @@ services:
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     depends_on:
       - zookeeper
-  mongo:
-    image: mongo:latest
-    container_name: mongo-container
+  # mongo:
+  #   image: mongo:latest
+  #   container_name: mongo-container
+  #   ports:
+  #     - "27017:27017"
+  #   restart: always
+  #   volumes:
+  #     - mongodb_data:/var/lib/mongodb/data
+  couchdb:
+    image: couchdb:latest
+    container_name: couchdb-container
     ports:
-      - "27017:27017"
-    restart: always
+      - "5984:5984"
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=password
     volumes:
-      - mongodb_data:/data/db
+      - couchdb_data:/var/lib/couchdb/data
+    restart: always
   postgres:
     image: postgres:latest
     container_name: postgres-container
@@ -53,7 +62,8 @@ volumes:
     driver: local
   kafka_data:
     driver: local
-  mongodb_data:
+  # mongodb_data:
+  couchdb_data:
     driver: local
   postgres_data:
     driver: local

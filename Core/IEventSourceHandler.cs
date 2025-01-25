@@ -1,6 +1,6 @@
 namespace Core;
 
-public interface IEventSourcingHandler<T> // todo consider "where" T is aggregateRoot or what
+public interface IEventSourcingHandler<T> where T : AggregateRoot, new()
 {
     Task SaveAsync(AggregateRoot root);
     Task<T> GetByIdAsync(Guid id);

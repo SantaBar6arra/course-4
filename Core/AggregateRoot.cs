@@ -10,7 +10,6 @@ public abstract class AggregateRoot
     public Guid Id => _id;
     public int Version { get; set; } = -1;
 
-
     public IList<BaseEvent> GetUncommittedChanges() => _changes;
     public void MarkChangesAsCommitted() => _changes.Clear();
     protected void RaiseEvent(BaseEvent ev) => ApplyChange(ev, true);

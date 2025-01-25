@@ -1,8 +1,9 @@
+using CouchDB.Driver.Types;
+
 namespace Core;
 
-public class EventModel
+public class EventModel : CouchDocument
 {
-    public string Id { get; set; }
     public DateTime TimeStamp { get; set; }
     public Guid AggregateId { get; set; }
     public string AggregateType { get; set; } = string.Empty;
