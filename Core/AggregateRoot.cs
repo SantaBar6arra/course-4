@@ -22,8 +22,8 @@ public abstract class AggregateRoot
 
     private void ApplyChange(BaseEvent @event, bool isNew)
     {
-        var method = GetType().GetMethod("Apply", BindingFlags.Instance | BindingFlags.NonPublic, [@event.GetType()])
-            ?? throw new InvalidOperationException("no 'Apply' method found on aggregate");
+        var method = GetType().GetMethod("On", BindingFlags.Instance | BindingFlags.NonPublic, [@event.GetType()])
+            ?? throw new InvalidOperationException("no 'On' method found on aggregate");
 
         method.Invoke(this, [@event]);
 
