@@ -1,4 +1,4 @@
-using Common;
+using Common.Events;
 using Common.Models;
 using Core;
 
@@ -31,7 +31,6 @@ public class Client : AggregateRoot
         string firstName,
         string lastName,
         ClientStatus status,
-        Contact contact,
         Address address)
     {
         RaiseEvent(new ClientCreated(
@@ -39,17 +38,16 @@ public class Client : AggregateRoot
             firstName,
             lastName,
             status,
-            contact,
             address
         ));
     }
 
-    public void UpdateContact(Contact contact)
+    public void UpdateBaseData(
+        string firstName,
+        string lastName,
+        ClientStatus status)
     {
-        if (_status is ClientStatus.Deleted)
-            throw new Exception("entity is already deleted!"); // todo add custom exception
-
-        RaiseEvent(new ClientContactUpdated(Id, contact));
+        RaiseEvent(new ClientBaseDataUpdated(Id, firstName, lastName, status));
     }
 
     public void UpdateAddress(Address address)
@@ -80,15 +78,28 @@ public class Client : AggregateRoot
         _status = @event.Status;
         _createdAt = DateTime.Now;
         _lastUpdatedAt = DateTime.Now;
-        _contact = @event.Contact;
         _address = @event.Address;
     }
 
-    private void On(ClientContactUpdated @event) => _contact = @event.Contact;
+    private void On(ClientBaseDataUpdated @event)
+    {
+        _firstName = @event.FirstName;
+        _lastName = @event.LastName;
+        _status = @event.Status;
+        _lastUpdatedAt = DateTime.Now;
+    }
 
-    private void On(ClientAddressUpdated @event) => _address = @event.Address;
+    private void On(ClientAddressUpdated @event)
+    {
+        _address = @event.Address;
+        _lastUpdatedAt = DateTime.Now;
+    }
 
-    private void On(ClientDeleted _) => _status = ClientStatus.Deleted;
+    private void On(ClientDeleted _)
+    {
+        _status = ClientStatus.Deleted;
+        _lastUpdatedAt = DateTime.Now;
+    }
 
     #endregion
 }

@@ -8,17 +8,6 @@ public record Address(
     int House,
     string PostalCode);
 
-
-public enum ContactType
-{
-    Email,
-    Phone
-}
-
-public record Contact(
-    ContactType Type,
-    string Value);
-
 public enum ClientStatus
 {
     Active,

@@ -5,11 +5,9 @@ using Core;
 
 namespace Command.Infrastructure;
 
-public class EventProducer : IEventProducer
+public class EventProducer(IOptions<ProducerConfig> config) : IEventProducer
 {
-    private readonly ProducerConfig _config;
-
-    public EventProducer(IOptions<ProducerConfig> config) => _config = config.Value;
+    private readonly ProducerConfig _config = config.Value;
 
     public async Task ProduceAsync<T>(string topic, T @event) where T : BaseEvent
     {
