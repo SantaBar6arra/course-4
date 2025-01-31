@@ -11,8 +11,9 @@ public interface IClientCommandHandler
     Task HandleAsync(DeleteClient command);
 }
 
-public class ClientCommandHandler(IEventSourcingHandler<Client> eventSourcingHandler)
-    : IClientCommandHandler
+public class ClientCommandHandler(
+    IEventSourcingHandler<Client> clientsHandler,
+    IEventSourcingHandler<ClientContact> clientContactsHandler) : IClientCommandHandler
 {
     public async Task HandleAsync(CreateClient command)
     {
@@ -21,12 +22,12 @@ public class ClientCommandHandler(IEventSourcingHandler<Client> eventSourcingHan
             command.LastName,
             command.ClientStatus,
             command.Address);
-        await eventSourcingHandler.SaveAsync(client);
+        await clientsHandler.SaveAsync(client);
 
         var clientContactsTask = command.Contacts.Select(contact =>
         {
             var clientContact = new ClientContact(client.Id, contact.Type, contact.Value);
-            return eventSourcingHandler.SaveAsync(clientContact);
+            return clientContactsHandler.SaveAsync(clientContact);
         });
 
         await Task.WhenAll(clientContactsTask);
@@ -34,16 +35,20 @@ public class ClientCommandHandler(IEventSourcingHandler<Client> eventSourcingHan
 
     public async Task HandleAsync(UpdateClient command)
     {
-        var client = await eventSourcingHandler.GetByIdAsync(command.Id);
+        var client = await clientsHandler.GetByIdAsync(command.Id);
         client.UpdateBaseData(command.FirstName, command.LastName, command.ClientStatus);
         client.UpdateAddress(command.Address);
-        await eventSourcingHandler.SaveAsync(client);
+        await clientsHandler.SaveAsync(client);
     }
 
     public async Task HandleAsync(DeleteClient command)
     {
-        var client = await eventSourcingHandler.GetByIdAsync(command.Id);
+        var client = await clientsHandler.GetByIdAsync(command.Id);
         client.Delete();
-        await eventSourcingHandler.SaveAsync(client);
+
+        // look up postgres database for contacts
+        // and call delete for each of them
+
+        await clientsHandler.SaveAsync(client);
     }
 }

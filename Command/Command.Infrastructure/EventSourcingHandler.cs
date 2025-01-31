@@ -1,6 +1,6 @@
 using Core;
 
-namespace Command.Infrastructure.Handlers;
+namespace Command.Infrastructure;
 
 public class EventSourcingHandler<T>(IEventStore eventStore)
     : IEventSourcingHandler<T> where T : AggregateRoot, new()
@@ -19,7 +19,7 @@ public class EventSourcingHandler<T>(IEventStore eventStore)
         return aggregate;
     }
 
-    public async Task SaveAsync(AggregateRoot aggregate)
+    public async Task SaveAsync(T aggregate)
     {
         await eventStore.SaveEventsAsync(aggregate, aggregate.GetUncommittedChanges(), aggregate.Version);
         aggregate.MarkChangesAsCommitted();

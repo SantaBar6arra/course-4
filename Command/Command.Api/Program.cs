@@ -2,7 +2,6 @@ using Command.Api;
 using Command.Api.Handlers;
 using Command.Domain.Aggregates;
 using Command.Infrastructure;
-using Command.Infrastructure.Handlers;
 using Confluent.Kafka;
 using Core;
 using CouchDB.Driver.DependencyInjection;
