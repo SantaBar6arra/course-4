@@ -17,9 +17,11 @@ builder.Services.AddCouchContext<DataContext>(contextBuilder =>
 
     contextBuilder
         .UseEndpoint(couchDbConfig.Endpoint)
+        .EnsureDatabaseExists()
         .UseBasicAuthentication(couchDbConfig.Username, couchDbConfig.Password);
 });
 builder.Services.Configure<ProducerConfig>(builder.Configuration.GetSection(nameof(ProducerConfig)));
+builder.Services.Configure<KafkaConfig>(builder.Configuration.GetSection(nameof(KafkaConfig)));
 builder.Services.AddScoped<IEventStoreRepository, EventStoreRepositoryV2>();
 builder.Services.AddScoped<IEventProducer, EventProducer>();
 builder.Services.AddScoped<IEventStore, EventStore>();

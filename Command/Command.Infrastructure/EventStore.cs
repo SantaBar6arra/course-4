@@ -1,10 +1,15 @@
 using Core;
+using Microsoft.Extensions.Options;
 
 namespace Command.Infrastructure;
 
-public class EventStore(IEventStoreRepository eventStoreRepository, IEventProducer eventProducer)
-    : IEventStore
+public class EventStore(
+    IEventStoreRepository eventStoreRepository,
+    IEventProducer eventProducer,
+    IOptions<KafkaConfig> kafkaConfig) : IEventStore
 {
+    private readonly KafkaConfig _kafkaConfig = kafkaConfig.Value;
+
     public async Task<IList<BaseEvent>> GetEventsAsync(Guid aggregateId, Type aggregateType)
     {
         var eventStream = await eventStoreRepository.FindEvents(aggregateId, aggregateType);
@@ -49,7 +54,7 @@ public class EventStore(IEventStoreRepository eventStoreRepository, IEventProduc
             // we may have success in saving the event to the event store but fail to produce it to the kafka
             // so we may have to rollback the event store
             // so it is better to consider using transactions in couchdb
-            var topic = Environment.GetEnvironmentVariable("KAFKA_TOPIC") ?? throw new Exception("KAFKA_TOPIC is not set");
+            var topic = _kafkaConfig.Topic ?? throw new Exception("KAFKA_TOPIC is not set");
             await eventProducer.ProduceAsync(topic, @event);
         }
     }
