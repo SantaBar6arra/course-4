@@ -8,3 +8,10 @@ public record CreateClientDto(
     ClientStatus Status,
     Address Address,
     Contact[] Contacts);
+
+public record UpdateClientDto(
+    Guid Id,
+    string FirstName,
+    string LastName,
+    ClientStatus Status,
+    Address Address);

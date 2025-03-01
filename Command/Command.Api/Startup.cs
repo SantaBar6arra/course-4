@@ -16,6 +16,8 @@ public static class Startup
         dispatcher.Register<CreateClient>(clientCommandHandler.HandleAsync);
         dispatcher.Register<UpdateClient>(clientCommandHandler.HandleAsync);
         dispatcher.Register<DeleteClient>(clientCommandHandler.HandleAsync);
+        dispatcher.Register<UpdateClientContact>(clientCommandHandler.HandleAsync);
+        dispatcher.Register<DeleteClientContact>(clientCommandHandler.HandleAsync);
 
         builder.Services.AddSingleton<ICommandDispatcher>(_ => dispatcher);
     }

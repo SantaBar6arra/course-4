@@ -1,5 +1,6 @@
 using Command.Api;
 using Command.Api.Handlers;
+using Command.Api.Serializers;
 using Command.Domain.Aggregates;
 using Command.Infrastructure;
 using Confluent.Kafka;
@@ -17,7 +18,8 @@ builder.Services.AddCouchContext<DataContext>(contextBuilder =>
     contextBuilder
         .UseEndpoint(couchDbConfig.Endpoint)
         .EnsureDatabaseExists()
-        .UseBasicAuthentication(couchDbConfig.Username, couchDbConfig.Password);
+        .UseBasicAuthentication(couchDbConfig.Username, couchDbConfig.Password)
+        .ConfigureFlurlClient(flurlConfig => flurlConfig.JsonSerializer = new CommandJsonSerializer());
 });
 builder.Services.Configure<ProducerConfig>(builder.Configuration.GetSection(nameof(ProducerConfig)));
 builder.Services.Configure<KafkaConfig>(builder.Configuration.GetSection(nameof(KafkaConfig)));

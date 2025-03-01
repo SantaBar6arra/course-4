@@ -40,10 +40,10 @@ public class EventStore(
 
             var eventModel = new EventModel
             {
-                TimeStamp = DateTime.Now,
+                TimeStamp = DateTime.UtcNow,
                 Version = version,
                 EventData = @event,
-                EventType = @event.GetType().Name,
+                EventType = @event.GetType().FullName!,
                 AggregateId = aggregate.Id,
                 AggregateType = aggregate.GetType().Name
             };
@@ -54,8 +54,8 @@ public class EventStore(
             // we may have success in saving the event to the event store but fail to produce it to the kafka
             // so we may have to rollback the event store
             // so it is better to consider using transactions in couchdb
-            var topic = _kafkaConfig.Topic ?? throw new Exception("KAFKA_TOPIC is not set");
-            await eventProducer.ProduceAsync(topic, @event);
+            // var topic = _kafkaConfig.Topic ?? throw new Exception("KAFKA_TOPIC is not set");
+            // await eventProducer.ProduceAsync(topic, @event);
         }
     }
 }

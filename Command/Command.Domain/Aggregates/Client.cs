@@ -76,8 +76,8 @@ public class Client : AggregateRoot
         _firstName = @event.FirstName;
         _lastName = @event.LastName;
         _status = @event.Status;
-        _createdAt = DateTime.Now;
-        _lastUpdatedAt = DateTime.Now;
+        _createdAt = DateTime.UtcNow;
+        _lastUpdatedAt = DateTime.UtcNow;
         _address = @event.Address;
     }
 
@@ -86,19 +86,19 @@ public class Client : AggregateRoot
         _firstName = @event.FirstName;
         _lastName = @event.LastName;
         _status = @event.Status;
-        _lastUpdatedAt = DateTime.Now;
+        _lastUpdatedAt = DateTime.UtcNow;
     }
 
     private void On(ClientAddressUpdated @event)
     {
         _address = @event.Address;
-        _lastUpdatedAt = DateTime.Now;
+        _lastUpdatedAt = DateTime.UtcNow;
     }
 
     private void On(ClientDeleted _)
     {
         _status = ClientStatus.Deleted;
-        _lastUpdatedAt = DateTime.Now;
+        _lastUpdatedAt = DateTime.UtcNow;
     }
 
     #endregion

@@ -9,6 +9,8 @@ public interface IClientCommandHandler
     Task HandleAsync(CreateClient command);
     Task HandleAsync(UpdateClient command);
     Task HandleAsync(DeleteClient command);
+    Task HandleAsync(UpdateClientContact command);
+    Task HandleAsync(DeleteClientContact command);
 }
 
 public class ClientCommandHandler(
@@ -50,5 +52,19 @@ public class ClientCommandHandler(
         // and call delete for each of them
 
         await clientsHandler.SaveAsync(client);
+    }
+
+    public async Task HandleAsync(UpdateClientContact command)
+    {
+        var clientContact = await clientContactsHandler.GetByIdAsync(command.Id);
+        clientContact.Update(command.Type, command.Value);
+        await clientContactsHandler.SaveAsync(clientContact);
+    }
+
+    public async Task HandleAsync(DeleteClientContact command)
+    {
+        var clientContact = await clientContactsHandler.GetByIdAsync(command.Id);
+        clientContact.Delete();
+        await clientContactsHandler.SaveAsync(clientContact);
     }
 }

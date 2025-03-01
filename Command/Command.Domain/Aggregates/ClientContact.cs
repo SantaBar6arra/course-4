@@ -52,6 +52,7 @@ public class ClientContact : AggregateRoot
 
     private void On(ClientContactCreated @event)
     {
+        _id = @event.Id;
         _clientId = @event.ClientId;
         _type = @event.ContactType;
         _value = @event.Value;
