@@ -1,29 +1,16 @@
 using Command.Api;
 using Command.Api.Handlers;
-using Command.Api.Serializers;
 using Command.Domain.Aggregates;
 using Command.Infrastructure;
 using Confluent.Kafka;
 using Core;
-using CouchDB.Driver.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddCouchContext<DataContext>(contextBuilder =>
-{
-    var couchDbConfig = builder.Configuration.GetSection(nameof(CouchDbConfig)).Get<CouchDbConfig>()
-        ?? throw new NullReferenceException("no couchDb data in the config!");
-
-    contextBuilder
-        .UseEndpoint(couchDbConfig.Endpoint)
-        .EnsureDatabaseExists()
-        .UseBasicAuthentication(couchDbConfig.Username, couchDbConfig.Password)
-        .ConfigureFlurlClient(flurlConfig => flurlConfig.JsonSerializer = new CommandJsonSerializer());
-});
+builder.Services.Configure<RavenDbConfig>(builder.Configuration.GetSection(nameof(RavenDbConfig)));
 builder.Services.Configure<ProducerConfig>(builder.Configuration.GetSection(nameof(ProducerConfig)));
 builder.Services.Configure<KafkaConfig>(builder.Configuration.GetSection(nameof(KafkaConfig)));
-builder.Services.AddScoped<IEventStoreRepository, EventStoreRepositoryV2>();
+builder.Services.AddScoped<IEventStoreRepository, EventStoreRepositoryV3>();
 builder.Services.AddScoped<IEventProducer, EventProducer>();
 builder.Services.AddScoped<IEventStore, EventStore>();
 builder.Services.AddScoped<IEventSourcingHandler<Client>, EventSourcingHandler<Client>>();
