@@ -54,8 +54,8 @@ public class EventStore(
             // we may have success in saving the event to the event store but fail to produce it to the kafka
             // so we may have to rollback the event store
             // so it is better to consider using transactions in ravendb
-            // var topic = _kafkaConfig.Topic ?? throw new Exception("KAFKA_TOPIC is not set");
-            // await eventProducer.ProduceAsync(topic, @event);
+            var topic = _kafkaConfig.Topic ?? throw new Exception("KAFKA_TOPIC is not set");
+            await eventProducer.ProduceAsync(topic, @event);
         }
     }
 }

@@ -53,7 +53,7 @@ public class Client : AggregateRoot
     public void UpdateAddress(Address address)
     {
         if (_status is ClientStatus.Deleted)
-            throw new Exception("entity is already deleted!");
+            throw new InvalidOperationException("entity is already deleted!");
 
         RaiseEvent(new ClientAddressUpdated(Id, address));
     }
@@ -61,7 +61,7 @@ public class Client : AggregateRoot
     public void Delete()
     {
         if (_status is ClientStatus.Deleted)
-            throw new Exception("entity is already deleted!");
+            throw new InvalidOperationException("entity is already deleted!");
 
         RaiseEvent(new ClientDeleted(Id));
     }
