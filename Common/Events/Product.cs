@@ -9,7 +9,7 @@ public record ProductCreated(
     decimal Price,
     uint StockQuantity,
     string Category,
-    List<string> Tags) : BaseEvent(Id, nameof(ProductCreated));
+    List<string> Tags) : BaseEvent(Id, typeof(ProductCreated));
 
 public record ProductDetailsUpdated(
     Guid Id,
@@ -17,12 +17,12 @@ public record ProductDetailsUpdated(
     string Description,
     decimal Price,
     string Category,
-    List<string> Tags) : BaseEvent(Id, nameof(ProductDetailsUpdated));
+    List<string> Tags) : BaseEvent(Id, typeof(ProductDetailsUpdated));
 
 public record ProductStockQuantityUpdated(
     Guid Id,
-    uint StockQuantity) : BaseEvent(Id, nameof(ProductStockQuantityUpdated));
+    uint StockQuantity) : BaseEvent(Id, typeof(ProductStockQuantityUpdated));
 
-public record ProductDiscontinued(Guid Id) : BaseEvent(Id, nameof(ProductDiscontinued));
+public record ProductDiscontinued(Guid Id) : BaseEvent(Id, typeof(ProductDiscontinued));
 
-public record ProductUnlocked(Guid Id) : BaseEvent(Id, nameof(ProductUnlocked));
+public record ProductUnlocked(Guid Id) : BaseEvent(Id, typeof(ProductUnlocked));

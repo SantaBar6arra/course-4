@@ -1,6 +1,7 @@
 using System.Reflection;
 using Confluent.Kafka;
 using Core;
+using Microsoft.EntityFrameworkCore;
 using Query.Api;
 using Query.Infrastructure;
 
@@ -12,6 +13,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<DataContext>(opt =>
+    opt.UseNpgsql(builder.Configuration.GetConnectionString("Database")));
 
 builder.Services.Configure<ConsumerConfig>(builder.Configuration.GetSection(nameof(ConsumerConfig)));
 builder.Services.Configure<KafkaConfig>(builder.Configuration.GetSection(nameof(KafkaConfig)));

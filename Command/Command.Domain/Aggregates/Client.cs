@@ -15,7 +15,6 @@ public class Client : AggregateRoot
     private DateTime _createdAt;
     private DateTime _lastUpdatedAt;
 
-    private Contact _contact;
     private Address _address;
 
     #endregion

@@ -6,9 +6,9 @@ public abstract record BaseEvent
     public string Type { get; set; }
     public int Version { get; set; }
 
-    protected BaseEvent(Guid id, string type)
+    protected BaseEvent(Guid id, Type type)
     {
         Id = id;
-        Type = type;
+        Type = type.FullName!;
     }
 }

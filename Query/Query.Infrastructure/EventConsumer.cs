@@ -1,6 +1,8 @@
+using System.Text.Json;
 using Confluent.Kafka;
 using Core;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 
 namespace Query.Infrastructure;
 
@@ -12,7 +14,7 @@ public class EventConsumer : IEventConsumer
     public EventConsumer(IOptions<ConsumerConfig> config, IEnumerable<IEventHandler> eventHandlers)
     {
         _config = config.Value;
-        _eventHandlers = [.. eventHandlers];
+        _eventHandlers = eventHandlers.ToList();
     }
 
     public async Task Consume(string topic)
@@ -22,7 +24,7 @@ public class EventConsumer : IEventConsumer
             .SetValueDeserializer(Deserializers.Utf8)
             .Build();
 
-        // var options = new JsonSerializerOptions { Converters = { new EventJsonConverter() } };
+        var settings = new JsonSerializerSettings { Converters = { new EventJsonConverter() } };
         consumer.Subscribe(topic);
 
         while (true)
@@ -33,10 +35,10 @@ public class EventConsumer : IEventConsumer
 
             Console.WriteLine(consumeResult.Message.Value);
 
-            // var @event = JsonSerializer.Deserialize<BaseEvent>(consumeResult.Message.Value, options)
-            //     ?? throw new InvalidOperationException("could not deserialize event message!");
+            var @event = JsonConvert.DeserializeObject<BaseEvent>(consumeResult.Message.Value, settings)
+                ?? throw new InvalidOperationException("could not deserialize event message!");
 
-            // await HandleEvent(@event);
+            await HandleEvent(@event);
 
             consumer.Commit(consumeResult);
         }

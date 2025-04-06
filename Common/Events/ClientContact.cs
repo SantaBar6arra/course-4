@@ -7,11 +7,11 @@ public record ClientContactCreated(
     Guid Id,
     Guid ClientId,
     ContactType ContactType,
-    string Value) : BaseEvent(Id, nameof(ClientContactCreated));
+    string Value) : BaseEvent(Id, typeof(ClientContactCreated));
 
 public record ClientContactUpdated(
     Guid Id,
     ContactType ContactType,
-    string Value) : BaseEvent(Id, nameof(ClientContactUpdated));
+    string Value) : BaseEvent(Id, typeof(ClientContactUpdated));
 
-public record ClientContactDeleted(Guid Id) : BaseEvent(Id, nameof(ClientContactDeleted));
+public record ClientContactDeleted(Guid Id) : BaseEvent(Id, typeof(ClientContactDeleted));
