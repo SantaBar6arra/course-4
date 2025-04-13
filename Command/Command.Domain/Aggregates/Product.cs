@@ -1,4 +1,3 @@
-using System;
 using Common.Events;
 using Core;
 
