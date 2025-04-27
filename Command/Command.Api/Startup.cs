@@ -1,4 +1,3 @@
-using System;
 using Command.Api.Commands;
 using Command.Api.Handlers;
 using Command.Infrastructure;
@@ -13,6 +12,7 @@ public static class Startup
         var (dispatcher, serviceProvider) = (new CommandDispatcher(), builder.Services.BuildServiceProvider());
         var clientCommandHandler = serviceProvider.GetRequiredService<IClientCommandHandler>();
         var productCommandHandler = serviceProvider.GetRequiredService<IProductCommandHandler>();
+        var orderCommandHandler = serviceProvider.GetRequiredService<IOrderCommandHandler>();
 
         dispatcher.Register<CreateClient>(clientCommandHandler.HandleAsync);
         dispatcher.Register<UpdateClient>(clientCommandHandler.HandleAsync);
@@ -25,6 +25,11 @@ public static class Startup
         dispatcher.Register<UpdateProductStockQuantity>(productCommandHandler.HandleAsync);
         dispatcher.Register<DiscontinueProduct>(productCommandHandler.HandleAsync);
         dispatcher.Register<UnlockProduct>(productCommandHandler.HandleAsync);
+
+        dispatcher.Register<CreateOrder>(orderCommandHandler.HandleAsync);
+        dispatcher.Register<ConfirmOrder>(orderCommandHandler.HandleAsync);
+        dispatcher.Register<CancelOrder>(orderCommandHandler.HandleAsync);
+        dispatcher.Register<AddOrderItem>(orderCommandHandler.HandleAsync);
 
         builder.Services.AddSingleton<ICommandDispatcher>(_ => dispatcher);
     }

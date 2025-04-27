@@ -16,6 +16,7 @@ builder.Services.AddScoped<IEventStore, EventStore>();
 builder.Services.AddScoped<IEventSourcingHandler<Client>, EventSourcingHandler<Client>>();
 builder.Services.AddScoped<IEventSourcingHandler<ClientContact>, EventSourcingHandler<ClientContact>>();
 builder.Services.AddScoped<IEventSourcingHandler<Product>, EventSourcingHandler<Product>>();
+builder.Services.AddScoped<IEventSourcingHandler<Order>, EventSourcingHandler<Order>>();
 builder.Services.AddScoped<IClientCommandHandler, ClientCommandHandler>();
 builder.Services.AddScoped<IProductCommandHandler, ProductCommandHandler>();
 

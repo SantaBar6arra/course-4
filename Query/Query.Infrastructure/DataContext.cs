@@ -9,6 +9,8 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
     public DbSet<ClientContact> ClientContacts { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<ProductTag> ProductTags { get; set; }
+    public DbSet<Order> Orders { get; set; }
+    public DbSet<OrderItem> OrderItems { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
