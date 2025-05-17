@@ -25,31 +25,12 @@ services:
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     depends_on:
       - zookeeper
-  # mongo:
-  #   image: mongo:latest
-  #   container_name: mongo-container
-  #   ports:
-  #     - "27017:27017"
-  #   restart: always
-  #   volumes:
-  #     - mongodb_data:/var/lib/mongodb/data
-  # couchdb:
-  #   image: couchdb:latest
-  #   container_name: couchdb-container
-  #   ports:
-  #     - "5984:5984"
-  #   environment:
-  #     - COUCHDB_USER=admin
-  #     - COUCHDB_PASSWORD=password
-  #   volumes:
-  #     - couchdb_data:/var/lib/couchdb/data
-  #   restart: always
   ravendb:
     image: ravendb/ravendb
     container_name: ravendb
     ports:
-      - "8080:8080" # Exposes RavenDB HTTP interface
-      - "38888:38888" # Exposes RavenDB TCP interface
+      - "8080:8080"
+      - "38888:38888"
     environment:
       - RAVEN_AdminPassword=StrongPasswordHere
     volumes:
@@ -72,8 +53,6 @@ volumes:
     driver: local
   kafka_data:
     driver: local
-  # mongodb_data:
-  # couchdb_data:
   ravendb_data:
     driver: local
   postgres_data:
@@ -83,3 +62,27 @@ networks:
   default:
     name: course_work_network
     external: false
+# services:
+# mongo:
+#   image: mongo:latest
+#   container_name: mongo-container
+#   ports:
+#     - "27017:27017"
+#   restart: always
+#   volumes:
+#     - mongodb_data:/var/lib/mongodb/data
+# couchdb:
+#   image: couchdb:latest
+#   container_name: couchdb-container
+#   ports:
+#     - "5984:5984"
+#   environment:
+#     - COUCHDB_USER=admin
+#     - COUCHDB_PASSWORD=password
+#   volumes:
+#     - couchdb_data:/var/lib/couchdb/data
+#   restart: always
+
+# volumes:
+# mongodb_data:
+# couchdb_data:

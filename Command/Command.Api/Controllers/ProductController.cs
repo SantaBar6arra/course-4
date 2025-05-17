@@ -7,29 +7,54 @@ namespace Command.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductController(ICommandDispatcher dispatcher) : ControllerBase
+    public class ProductController(ICommandDispatcher dispatcher, ILogger<ProductController> logger) : ControllerBase
     {
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateProductDto productDto)
         {
-            await dispatcher.SendAsync(new CreateProduct(
-                productDto.Name, productDto.Description, productDto.Price, productDto.StockQuantity,
-                productDto.Category, productDto.Tags));
+            try
+            {
+                await dispatcher.SendAsync(new CreateProduct(
+                    productDto.Name, productDto.Description, productDto.Price, productDto.StockQuantity,
+                    productDto.Category, productDto.Tags));
 
-            return Ok();
+                return Created();
+            }
+            catch (InvalidOperationException exception)
+            {
+                logger.LogError("an error occured: {message}", exception.Message);
+                return new ObjectResult(new { exception.Message }) { StatusCode = 400 };
+            }
+            catch
+            {
+                return new ObjectResult("internal server error") { StatusCode = 500 };
+            }
+
         }
 
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateProductDto productDto)
         {
-            await dispatcher.SendAsync(new UpdateProductDetails(
-                productDto.Id, productDto.Name, productDto.Description, productDto.Price,
-                productDto.Category, productDto.Tags));
+            try
+            {
+                await dispatcher.SendAsync(new UpdateProductDetails(
+                    productDto.Id, productDto.Name, productDto.Description, productDto.Price,
+                    productDto.Category, productDto.Tags));
 
-            await dispatcher.SendAsync(new UpdateProductStockQuantity(
-                productDto.Id, productDto.StockQuantity));
+                await dispatcher.SendAsync(new UpdateProductStockQuantity(
+                    productDto.Id, productDto.StockQuantity));
 
-            return Ok();
+                return Ok();
+            }
+            catch (InvalidOperationException exception)
+            {
+                logger.LogError("an error occured: {message}", exception.Message);
+                return new ObjectResult(new { exception.Message }) { StatusCode = 400 };
+            }
+            catch
+            {
+                return new ObjectResult("internal server error") { StatusCode = 500 };
+            }
         }
 
         [HttpPatch("{id:guid}/discontinue")]

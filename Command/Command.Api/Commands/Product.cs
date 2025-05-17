@@ -18,6 +18,8 @@ public record UpdateProductDetails(
     string Category,
     List<string> Tags) : BaseCommand;
 
+public record SellProduct(Guid Id, uint Quantity);
+
 public record UpdateProductStockQuantity(
     Guid Id,
     uint StockQuantity) : BaseCommand;

@@ -6,7 +6,7 @@ namespace Query.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProdcutController(IMediator mediator) : ControllerBase
+    public class ProductController(IMediator mediator) : ControllerBase
     {
         [HttpGet]
         public async Task<IActionResult> List([FromQuery] ListAllProductsRequest listProductsRequest) =>

@@ -11,7 +11,9 @@ public interface IOrderCommandHandler
     Task HandleAsync(AddOrderItem command);
 }
 
-public class OrderCommandHandler(IEventSourcingHandler<Order> orderHandler)
+public class OrderCommandHandler(
+    IEventSourcingHandler<Order> orderHandler,
+    IEventSourcingHandler<Product> productHandler)
     : IOrderCommandHandler
 {
     public async Task HandleAsync(CreateOrder command)
@@ -31,6 +33,14 @@ public class OrderCommandHandler(IEventSourcingHandler<Order> orderHandler)
     {
         var order = await orderHandler.GetByIdAsync(command.Id);
         order.Confirm();
+
+        foreach (var item in order.Items)
+        {
+            var product = await productHandler.GetByIdAsync(item.ProductId);
+            product.Sell(item.Quantity);
+            await productHandler.SaveAsync(product);
+        }
+
         await orderHandler.SaveAsync(order);
     }
 

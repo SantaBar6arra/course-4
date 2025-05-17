@@ -15,11 +15,12 @@ public class ProductQueryHandler(DataContext context, IMapper mapper)
     {
         var products = await context.Products
             .Include(product => product.Tags)
-            .Where(product => string.IsNullOrEmpty(request.Name) || product.Name.Contains(request.Name, StringComparison.CurrentCultureIgnoreCase))
-            .Where(product => request.PriceMin.HasValue || product.Price >= request.PriceMin)
-            .Where(product => request.PriceMax.HasValue || product.Price <= request.PriceMax)
+            .Where(product => string.IsNullOrEmpty(request.Name) || product.Name.ToLower().Contains(request.Name.ToLower()))
+            .Where(product => !request.PriceMin.HasValue || product.Price >= request.PriceMin)
+            .Where(product => !request.PriceMax.HasValue || product.Price <= request.PriceMax)
             .Where(product => string.IsNullOrEmpty(request.Category) || product.Category == request.Category)
             .Where(product => request.Tags == null || request.Tags.All(tag => product.Tags.Any(pTag => pTag.Name == tag)))
+            .Where(product => product.IsAvailable)
             .ToListAsync(cancellationToken);
 
         var productDtos = products.Select(mapper.Map<ListProductDto>);
@@ -31,8 +32,8 @@ public class ProductQueryHandler(DataContext context, IMapper mapper)
         GetProductByIdRequest request, CancellationToken cancellationToken)
     {
         var product = await context.Products
-            .Include(client => client.Tags)
-            .SingleOrDefaultAsync(client => client.Id == request.Id, cancellationToken);
+            .Include(product => product.Tags)
+            .SingleOrDefaultAsync(product => product.Id == request.Id, cancellationToken);
 
         var productDto = mapper.Map<ProductDto>(product);
 

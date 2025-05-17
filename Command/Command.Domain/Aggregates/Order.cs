@@ -15,6 +15,8 @@ public class Order : AggregateRoot
     private OrderStatus _status;  // Changed from string to OrderStatus enum
     private decimal _totalAmount;
 
+    public List<OrderItem> Items => _items;
+
     #endregion
 
     #region Constructors

@@ -27,7 +27,7 @@ public class ProductHandler(DataContext context)
             IsAvailable = true,
         };
 
-        var tags = @event.Tags.Select(tag => new ProductTag(tag));
+        var tags = @event.Tags.Select(tag => new ProductTag(product.Id, tag));
 
         await _context.ProductTags.AddRangeAsync(tags);
         await _context.Products.AddAsync(product);
@@ -49,7 +49,7 @@ public class ProductHandler(DataContext context)
         var tagsToDelete = product.Tags.Where(tag => !@event.Tags.Contains(tag.Name));
         var newTags = @event.Tags
             .Where(tag => !product.Tags.Any(productTag => productTag.Name == tag))
-            .Select(tag => new ProductTag(tag));
+            .Select(tag => new ProductTag(product.Id, tag));
 
         _context.ProductTags.RemoveRange(tagsToDelete);
         await _context.ProductTags.AddRangeAsync(newTags);
