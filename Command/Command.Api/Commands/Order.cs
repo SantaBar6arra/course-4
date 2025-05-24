@@ -3,7 +3,6 @@ using Core;
 namespace Command.Api.Commands;
 
 public record CreateOrder(
-    Guid Id,
     Guid CustomerId,
     List<OrderItemDto> Items
 ) : BaseCommand;

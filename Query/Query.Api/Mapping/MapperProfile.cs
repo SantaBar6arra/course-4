@@ -1,5 +1,6 @@
 using AutoMapper;
 using Query.Api.Queries.Client;
+using Query.Api.Queries.Order;
 using Query.Api.Queries.Product;
 using Query.Domain.Entities;
 
@@ -17,5 +18,8 @@ public class MapperProfile : Profile
         CreateMap<Product, ListProductDto>();
         CreateMap<Product, ProductDto>()
             .ForMember(d => d.Tags, opt => opt.MapFrom(s => s.Tags.Select(tag => tag.Name)));
+
+        CreateMap<Order, OrderDto>();
+        CreateMap<OrderItem, OrderItemDto>();
     }
 }

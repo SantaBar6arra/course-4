@@ -18,7 +18,7 @@ public class OrderCommandHandler(
 {
     public async Task HandleAsync(CreateOrder command)
     {
-        var (id, customerId, items) = command;
+        var (customerId, items) = command;
 
         var orderItems = items
             .Select(i => new OrderItem(i.ProductId, i.ProductName, i.UnitPrice, i.Quantity))

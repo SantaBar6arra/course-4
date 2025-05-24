@@ -46,6 +46,9 @@ public class Order : AggregateRoot
         if (_status == OrderStatus.Cancelled)
             throw new InvalidOperationException("Order is already cancelled.");
 
+        if (_status is OrderStatus.Confirmed or OrderStatus.Shipped or OrderStatus.Delivered)
+            throw new InvalidOperationException($"Order cannot be canceled since it is already {_status}.");
+
         RaiseEvent(new OrderCancelled(Id, reason));
     }
 

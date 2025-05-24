@@ -12,7 +12,7 @@ public class OrderController(ICommandDispatcher dispatcher) : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateOrder([FromBody] CreateOrderDto dto)
     {
-        var command = new CreateOrder(dto.Id, dto.CustomerId, dto.Items);
+        var command = new CreateOrder(dto.CustomerId, dto.Items);
         await dispatcher.SendAsync(command);
         return Ok();
     }
